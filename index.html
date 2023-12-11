@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JsonEditor</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <form id="jsonForm" action="#" method="post" enctype="multipart/form-data">
+        <label for="jsonFile">Sélectionnez un fichier JSON :</label>
+        <input type="file" id="jsonFile" name="jsonFile" accept=".json">
+        <input type="submit" value="Afficher le JSON">
+    </form>
+
+    <h1>Contenu du JSON <br></h1>
+    <div id="container"></div>
+    <div class="messages-container"></div>
+</body>
+
+<script src="./js/main.js" type="module"></script>
+
+</html>

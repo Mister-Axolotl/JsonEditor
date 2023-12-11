@@ -1,0 +1,66 @@
+@font-face {
+    font-family: 'Poppins';
+    src: url("../fonts/Poppins/Poppins-Regular.ttf");
+}
+
+body {
+    background-color: rgb(64, 64, 64);
+    color: white;
+    font-family: 'Poppins';
+}
+
+.messages-container {
+    display: flex;
+    flex-direction: column-reverse;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    margin-right: 15px;
+    pointer-events: none;
+}
+
+.error-message {
+    background-color: rgb(234, 94, 94);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    margin-bottom: 10px;
+    width: 30vw;
+    box-shadow: black 0px 5px 5px;
+    user-select: none;
+}
+
+.error-message.hide {
+    opacity: 0;
+}
+
+.success-message {
+    background-color: #23bf57;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    margin-bottom: 10px;
+    width: 30vw;
+    box-shadow: black 0px 5px 5px;
+    user-select: none;
+}
+
+.success-message.hide {
+    opacity: 0;
+}
+
+#container {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.array {
+    background-color: #882728;
+    padding: 15px;
+}

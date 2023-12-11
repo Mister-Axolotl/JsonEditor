@@ -1,0 +1,6 @@
+{
+    "errorMessageInvalidJSON": "Erreur : Le fichier n'est pas au format JSON valide.",
+
+    "lineNumberMessage": "Numéro de la ligne : ",
+    "arrayContent": "Contenu du tableau : "
+}
