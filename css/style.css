@@ -4,8 +4,8 @@
 }
 
 body {
-    background-color: rgb(64, 64, 64);
-    color: white;
+    background-color: #04080f;
+    color: #dae3e5;
     font-family: 'Poppins';
 }
 
@@ -53,14 +53,38 @@ body {
     opacity: 0;
 }
 
-#container {
+#json-container {
+    padding: 10px;
+    margin: 20px;
+    border: 1px solid #ccc;
+}
+
+.expand-btn {
+    cursor: pointer;
+    margin-left: 10px;
+    color: rgb(255, 90, 90);
+    user-select: none;
+}
+
+.json-array {
     padding: 15px;
+    border: #004e64 solid 5px;
+    background-color: #023e8a;
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-.array {
-    background-color: #882728;
-    padding: 15px;
+.json-object {
+    padding: 10px;
+    border: #00a5cf solid 5px;
+    background-color: #0077b6;
+    border-radius: 15px;
+}
+
+.arrow::before {
+    content: '▶';
+    margin-right: 5px;
+    color: #00043a;
+    cursor: pointer;
 }

@@ -12,11 +12,17 @@
     <form id="jsonForm" action="#" method="post" enctype="multipart/form-data">
         <label for="jsonFile">Sélectionnez un fichier JSON :</label>
         <input type="file" id="jsonFile" name="jsonFile" accept=".json">
+        <input type="checkbox" id="replaceNumbersByNames" name="replaceNumbersByNames">
+        <label for="replaceNumbersByNames">ReplaceNumbersByNames</label>
+        <input type="checkbox" id="ShowAllByDefault" name="ShowAllByDefault">
+        <label for="ShowAllByDefault">Show all by default</label>
         <input type="submit" value="Afficher le JSON">
     </form>
 
     <h1>Contenu du JSON <br></h1>
-    <div id="container"></div>
+    <div id="container">
+        <div id="json-container" class="json-container"></div>
+    </div>
     <div class="messages-container"></div>
 </body>
 

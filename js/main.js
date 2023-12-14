@@ -1,4 +1,4 @@
-import { showError, showSuccess, sendArray } from "./functions.js";
+import { showError, showSuccess, createJsonObjectElement } from "./functions.js";
 
 var selectedLanguage = "fr";
 
@@ -9,7 +9,8 @@ fetch('./languages/' + selectedLanguage + '.json')
             e.preventDefault(); // prevent the default behavior associated with this event (submit)
 
             var fileInput = document.querySelector('#jsonFile');
-            var container = document.querySelector('#container');
+            var jsonContainer = document.querySelector('#json-container');
+            jsonContainer.innerHTML = "";
 
             var file = fileInput.files[0]; // takes the list of selected files
             var reader = new FileReader(); // is used to read the contents of the file
@@ -25,7 +26,11 @@ fetch('./languages/' + selectedLanguage + '.json')
                     return;
                 }
 
-                sendArray(content);
+                for (const key in jsonContent) {
+                    if (jsonContent.hasOwnProperty(key)) {
+                        createJsonObjectElement(key, jsonContent[key]);
+                    }
+                }
             };
 
             reader.readAsText(file);

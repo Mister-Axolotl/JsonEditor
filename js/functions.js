@@ -1,13 +1,13 @@
-let lineNumberMessage, lineContent, arrayContent;
+let colon;
 
 var selectedLanguage = "fr";
+const container = document.querySelector('#json-container');
+const checkboxReplaceNumbersByNames = document.querySelector('#replaceNumbersByNames');
 
 fetch('./languages/' + selectedLanguage + '.json')
     .then(response => response.json())
     .then(data => {
-        lineNumberMessage = data.lineNumberMessage;
-        arrayContent = data.arrayContent;
-        lineContent = data.lineContent;
+        colon = data.colon;
     })
     .catch(error => console.error('Error loading JSON file:', error));
 
@@ -43,74 +43,72 @@ export function showError(text) {
     }, 2000);
 }
 
-export function sendArray(content) {
-    const lines = content.split('\n');
-    let lineNumber = 0;
+export function createJsonObjectElement(key, values, depth = 0, parentElement = null) {
+    const elementDiv = document.createElement('div');
+    elementDiv.classList.add('array');
 
-    const regex = /"([^"]*)"/g; // Regular expression to extract content enclosed in double quotes
-    
-    lines.forEach(function (line) {
-        lineNumber++;
-        var container = document.getElementById('container');
-        var arrayDiv;
-        if (line.includes('{')) {
-            const matches = line.match(regex);
+    let arrayName = key;
 
-            if (matches) {
-                matches.forEach(match => {
-                    const values = match.substring(1, match.length - 1).split(',').map(value => value.trim());
-                    console.log("Array:", values);
-                });
-            } else {
-                
-                /*matches.forEach(match => {
-                    let array = match.replaceAll('"', '').replaceAll("'", '')
+    if (checkboxReplaceNumbersByNames.checked && !isNaN(key)) {
+        arrayName = parentElement ? parentElement.dataset.key : '';
+        arrayName = `${arrayName.replace(/s$/, '')} ${key}`;
+    }
 
-                    arrayDiv = document.createElement('div');
-                    arrayDiv.classList.add('array');
+    elementDiv.style.marginLeft = `20px`;
 
-                    var lineNumberDiv = document.createElement('div');
-                    lineNumberDiv.textContent = lineNumberMessage + lineNumber;
-                    arrayDiv.appendChild(lineNumberDiv);
+    elementDiv.dataset.key = arrayName;
+    elementDiv.innerText = `${arrayName}${colon}`;
 
-                    var arrayContentDiv = document.createElement('div');
-                    arrayContentDiv.textContent = arrayContent + array;
-                    arrayDiv.appendChild(arrayContentDiv);
-                });*/
-            }
-        } else {
-            var arrayContentDiv = document.createElement('div');
-            arrayDiv = document.createElement('div');
-            arrayDiv.classList.add('array');
-            let array = line.replaceAll('"', '').replaceAll("'", '');
-            arrayContentDiv.textContent = lineContent + array;
-            arrayDiv.appendChild(arrayContentDiv);
-            container.appendChild(arrayDiv);
-        }
-    });
+    if (parentElement) {
+        parentElement.appendChild(elementDiv);
+    } else {
+        container.appendChild(elementDiv);
+    }
+
+    displayValues(values, elementDiv, depth + 1);
 }
 
-/*if (!line.includes('{') && !line.includes('}')) {
-    if (line.includes('[')) { // detect an array
-        var matches = line.match(regex);
-        var container = document.getElementById('container');
-        var arrayDiv;
-        if (matches) {
-            matches.forEach(function (match) {
-                let array = match.replaceAll('"', '').replaceAll("'", '')
-
-                arrayDiv = document.createElement('div');
-                arrayDiv.classList.add('array');
-
-                var lineNumberDiv = document.createElement('div');
-                lineNumberDiv.textContent = lineNumberMessage + lineNumber;
-                arrayDiv.appendChild(lineNumberDiv);
-
-                var arrayContentDiv = document.createElement('div');
-                arrayContentDiv.textContent = arrayContent + array;
-                arrayDiv.appendChild(arrayContentDiv);
-            });
-        }
-        container.appendChild(arrayDiv);
+export function displayValues(values, parentElement, depth) {
+    if (Array.isArray(values)) {
+        values.forEach((element, index) => {
+            createJsonObjectElement(index, element, depth, parentElement);
+            parentElement.classList.add("json-array");
+            parentElement.classList.add('arrow');
+        });
+    } else if (typeof values === 'object' && values !== null) {
+        parentElement.classList.add("json-object");
+        parentElement.classList.add('arrow');
+        Object.entries(values).forEach(([property, propertyValue]) => {
+            createJsonObjectElement(property, propertyValue, depth, parentElement);
+        });
+    } else {
+        const valueDiv = document.createElement('div');
+        valueDiv.innerText = `${values}`;
+        valueDiv.style.marginLeft = `20px`;
+        parentElement.appendChild(valueDiv);
     }
-}*/
+}
+
+document.addEventListener('click', function (event) {
+    const clickedElement = event.target;
+
+    if (clickedElement.classList.contains('arrow')) {
+        const parentElement = clickedElement.closest('.array');
+
+        if (parentElement) {
+            // Récupérez tous les enfants de l'élément parent
+            const children = parentElement.children;
+
+            // Parcourez tous les enfants et ajustez leur style
+            for (let i = 0; i < children.length; i++) {
+                const child = children[i];
+
+                // Ignorez l'élément de la flèche (l'élément cliqué)
+                if (child !== clickedElement) {
+                    // Alternez entre l'affichage et la non-affichage
+                    child.style.display = (child.style.display === 'none') ? '' : 'none';
+                }
+            }
+        }
+    }
+});
