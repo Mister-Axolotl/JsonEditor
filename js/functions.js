@@ -1,15 +1,22 @@
-let colon;
+/* ―――――――――――――――――――― LANGUAGES ―――――――――――――――――――― */
 
+let colon;
 var selectedLanguage = "fr";
+
+
+fetch('./languages/' + selectedLanguage + '.json')
+.then(response => response.json())
+.then(data => {
+    colon = data.colon;
+})
+.catch(error => console.error('Error loading JSON file:', error));
+
+/* ―――――――――――――――――――― DOM VARIABLES ―――――――――――――――――――― */
+
 const container = document.querySelector('#json-container');
 const checkboxReplaceNumbersByNames = document.querySelector('#replaceNumbersByNames');
 
-fetch('./languages/' + selectedLanguage + '.json')
-    .then(response => response.json())
-    .then(data => {
-        colon = data.colon;
-    })
-    .catch(error => console.error('Error loading JSON file:', error));
+/* ―――――――――――――――――――― SHOW MESSAGE SUCCESS ―――――――――――――――――――― */
 
 export function showSuccess(text) {
     const successContainer = document.querySelector('.messages-container');
@@ -27,6 +34,8 @@ export function showSuccess(text) {
     }, 2000);
 }
 
+/* ―――――――――――――――――――― SHOW MESSAGE ERROR ―――――――――――――――――――― */
+
 export function showError(text) {
     const errorContainer = document.querySelector('.messages-container');
     const errorMessage = document.createElement('div');
@@ -43,6 +52,8 @@ export function showError(text) {
     }, 2000);
 }
 
+/* ―――――――――――――――――――― CREATE OBJECT OR ARRAY ―――――――――――――――――――― */
+
 export function createJsonObjectElement(key, values, depth = 0, parentElement = null) {
     const elementDiv = document.createElement('div');
     elementDiv.classList.add('array');
@@ -55,6 +66,9 @@ export function createJsonObjectElement(key, values, depth = 0, parentElement = 
     }
 
     elementDiv.style.marginLeft = `20px`;
+    if (depth > 0 && key !== undefined) {
+        elementDiv.style.marginLeft = `40px`;
+    }
 
     elementDiv.dataset.key = arrayName;
     elementDiv.innerText = `${arrayName}${colon}`;
@@ -68,6 +82,16 @@ export function createJsonObjectElement(key, values, depth = 0, parentElement = 
     displayValues(values, elementDiv, depth + 1);
 }
 
+/* ―――――――――――――――――――― CLOSE ALL DEFAULT CHILDREN OF THE JSON FILE ―――――――――――――――――――― */
+
+export function closeAllDefaultChildren(parentElement) {
+    parentElement.querySelectorAll('.array').forEach(child => {
+        child.style.display = 'none';
+    });
+}
+
+/* ―――――――――――――――――――― DISPLAY OBJECT, ARRAY OR CONTENT  ―――――――――――――――――――― */
+
 export function displayValues(values, parentElement, depth) {
     if (Array.isArray(values)) {
         values.forEach((element, index) => {
@@ -75,12 +99,19 @@ export function displayValues(values, parentElement, depth) {
             parentElement.classList.add("json-array");
             parentElement.classList.add('arrow');
         });
+
+        closeAllDefaultChildren(parentElement);
+
     } else if (typeof values === 'object' && values !== null) {
         parentElement.classList.add("json-object");
         parentElement.classList.add('arrow');
+
+        
         Object.entries(values).forEach(([property, propertyValue]) => {
             createJsonObjectElement(property, propertyValue, depth, parentElement);
         });
+
+        closeAllDefaultChildren(parentElement);
     } else {
         const valueDiv = document.createElement('div');
         valueDiv.innerText = `${values}`;
@@ -89,6 +120,8 @@ export function displayValues(values, parentElement, depth) {
     }
 }
 
+/* ―――――――――――――――――――― OPEN/CLOSE CONTENT OF OBJECTS/ARRAYS ―――――――――――――――――――― */
+
 document.addEventListener('click', function (event) {
     const clickedElement = event.target;
 
@@ -96,19 +129,24 @@ document.addEventListener('click', function (event) {
         const parentElement = clickedElement.closest('.array');
 
         if (parentElement) {
-            // Récupérez tous les enfants de l'élément parent
             const children = parentElement.children;
 
-            // Parcourez tous les enfants et ajustez leur style
             for (let i = 0; i < children.length; i++) {
                 const child = children[i];
 
-                // Ignorez l'élément de la flèche (l'élément cliqué)
+                // Ignore the arrow element (the clicked element)
                 if (child !== clickedElement) {
-                    // Alternez entre l'affichage et la non-affichage
                     child.style.display = (child.style.display === 'none') ? '' : 'none';
                 }
             }
+
+            clickedElement.classList.toggle('active');
         }
     }
 });
+
+/* ―――――――――――――――――――― GET THE CURRENT LANGUAGE  ―――――――――――――――――――― */
+
+export function getLanguage() {
+    
+}
