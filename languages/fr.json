@@ -1,5 +1,6 @@
 {
     "errorMessageInvalidJSON": "Erreur : Le fichier n'est pas au format JSON valide.",
 
-    "colon": " :"
+    "colon": " :",
+    "messageVoid": "vide"
 }

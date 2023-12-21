@@ -77,7 +77,7 @@ body {
     background-color: #023e8a;
 }
 
-.json-array > * {
+.json-array>* {
     margin-top: 5px;
 }
 
@@ -86,6 +86,13 @@ body {
     border: #00a5cf solid 5px;
     background-color: #0077b6;
     border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.value {
+    background-color: #23bf57;
 }
 
 .arrow::before {
@@ -94,7 +101,7 @@ body {
     width: 16px;
     height: 16px;
     background-image: url('../images/arrow-right.png');
-    background-size: contain; 
+    background-size: contain;
     background-repeat: no-repeat;
     margin-right: 5px;
     cursor: pointer;

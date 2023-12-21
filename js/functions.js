@@ -1,6 +1,6 @@
 /* ―――――――――――――――――――― LANGUAGES ―――――――――――――――――――― */
 
-let colon;
+let colon, messageVoid;
 var selectedLanguage = "fr";
 
 
@@ -8,6 +8,7 @@ fetch('./languages/' + selectedLanguage + '.json')
 .then(response => response.json())
 .then(data => {
     colon = data.colon;
+    messageVoid = data.messageVoid
 })
 .catch(error => console.error('Error loading JSON file:', error));
 
@@ -71,7 +72,17 @@ export function createJsonObjectElement(key, values, depth = 0, parentElement = 
     }
 
     elementDiv.dataset.key = arrayName;
-    elementDiv.innerText = `${arrayName}${colon}`;
+    
+    if (Array.isArray(values) || (typeof values === 'object' && values !== null)) {
+        elementDiv.innerText = `${arrayName}${colon}`;
+    } else {
+        elementDiv.innerText = `${arrayName}${colon} ${values}`;
+        elementDiv.classList.add("value");
+    }
+
+    if (Array.isArray(values)) {
+        elementDiv.classList.add('arrow');
+    }
 
     if (parentElement) {
         parentElement.appendChild(elementDiv);
@@ -94,29 +105,32 @@ export function closeAllDefaultChildren(parentElement) {
 
 export function displayValues(values, parentElement, depth) {
     if (Array.isArray(values)) {
+        // Ajouter les crochets [] ici
+        const arrayElement = document.createElement('div');
+        arrayElement.classList.add('array');
+        arrayElement.innerText = `[${messageVoid}]`;
+
+        parentElement.appendChild(arrayElement);
+
         values.forEach((element, index) => {
             createJsonObjectElement(index, element, depth, parentElement);
             parentElement.classList.add("json-array");
             parentElement.classList.add('arrow');
         });
-
+        
         closeAllDefaultChildren(parentElement);
 
     } else if (typeof values === 'object' && values !== null) {
         parentElement.classList.add("json-object");
         parentElement.classList.add('arrow');
 
-        
         Object.entries(values).forEach(([property, propertyValue]) => {
             createJsonObjectElement(property, propertyValue, depth, parentElement);
         });
 
         closeAllDefaultChildren(parentElement);
     } else {
-        const valueDiv = document.createElement('div');
-        valueDiv.innerText = `${values}`;
-        valueDiv.style.marginLeft = `20px`;
-        parentElement.appendChild(valueDiv);
+        
     }
 }
 
